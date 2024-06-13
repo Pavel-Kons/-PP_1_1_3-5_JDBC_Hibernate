@@ -99,7 +99,7 @@ public class UserDaoJDBCImpl implements UserDao {
                 users.add(user);
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            logger.warning("Can't get all users");
         }
         System.out.println(users);
         return users;
@@ -109,7 +109,7 @@ public class UserDaoJDBCImpl implements UserDao {
         try {
             Util.createStatement().executeUpdate("DELETE FROM user;");
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            logger.warning("Failed to clean table");
         }
     }
 }
