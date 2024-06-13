@@ -26,8 +26,6 @@ public class UserDaoJDBCImpl implements UserDao {
                 "  PRIMARY KEY (`id`));";
         try {
             Util.createStatement().executeUpdate(createTableSQL);
-//            Statement statement = Util.createStatement();
-//            statement.executeUpdate(createTableSQL);
         } catch (SQLException e) {
             logger.log(Level.WARNING, "Failed to create table");
         }
@@ -36,8 +34,6 @@ public class UserDaoJDBCImpl implements UserDao {
     public void dropUsersTable() {
         String dropTableSQL = "DROP TABLE user";
         try {
-//            Statement statement = Util.createStatement();
-//            statement.executeUpdate(dropTableSQL);
             Util.createStatement().executeUpdate(dropTableSQL);
         } catch (SQLException e) {
             logger.log(Level.WARNING, "Failed to drop table");
@@ -87,9 +83,6 @@ public class UserDaoJDBCImpl implements UserDao {
                 String name = resultSet.getString("name");
                 String lastName = resultSet.getString("last_name");
                 byte age = resultSet.getByte("age");
-
-//                System.out.println("__________");
-//                System.out.println(id + " " + name + " " + lastName + " " + age);
 
                 User user = new User();
                 user.setAge(age);
