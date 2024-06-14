@@ -17,6 +17,7 @@ public class UserDaoJDBCImpl implements UserDao {
     public UserDaoJDBCImpl() {
     }
 
+    @Override
     public void createUsersTable() {
         String createTableSQL = "CREATE TABLE IF NOT EXISTS `new_schema`.`user` (\n" +
                 "  `id` INT NOT NULL AUTO_INCREMENT,\n" +
@@ -31,6 +32,7 @@ public class UserDaoJDBCImpl implements UserDao {
         }
     }
 
+    @Override
     public void dropUsersTable() {
         String dropTableSQL = "DROP TABLE user";
         try {
@@ -40,6 +42,7 @@ public class UserDaoJDBCImpl implements UserDao {
         }
     }
 
+    @Override
     public void saveUser(String name, String lastName, byte age) {
         String saveUser = "INSERT INTO `new_schema`.`user`(`name`,`last_name`,`age`)\n" +
                 "VALUES\n" +
@@ -59,6 +62,7 @@ public class UserDaoJDBCImpl implements UserDao {
         }
     }
 
+    @Override
     public void removeUserById(long id) {
         String removeUser = "DELETE FROM `new_schema`.`user`\n" +
                 "WHERE id=?;";
@@ -73,6 +77,7 @@ public class UserDaoJDBCImpl implements UserDao {
         }
     }
 
+    @Override
     public List<User> getAllUsers() {
         String getAllUsersSQL = "SELECT * FROM `new_schema`.`user`";
         List<User> users = new ArrayList<>();
@@ -98,6 +103,7 @@ public class UserDaoJDBCImpl implements UserDao {
         return users;
     }
 
+    @Override
     public void cleanUsersTable() {
         try {
             Util.createStatement().executeUpdate("DELETE FROM user;");
