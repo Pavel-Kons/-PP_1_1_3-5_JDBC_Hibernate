@@ -106,6 +106,7 @@ public class UserDaoJDBCImpl implements UserDao {
     @Override
     public void cleanUsersTable() {
         try {
+//            Statement statement = Util.createStatement();
             Util.createStatement().executeUpdate("DELETE FROM user;");
         } catch (SQLException e) {
             logger.warning("Failed to clean table");
