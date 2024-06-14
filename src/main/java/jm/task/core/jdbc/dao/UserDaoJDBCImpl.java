@@ -6,6 +6,7 @@ import jm.task.core.jdbc.util.Util;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -25,8 +26,8 @@ public class UserDaoJDBCImpl implements UserDao {
                 "  `last_name` VARCHAR(45) NOT NULL,\n" +
                 "  `age` INT(3) NOT NULL,\n" +
                 "  PRIMARY KEY (`id`));";
-        try {
-            Util.createStatement().executeUpdate(createTableSQL);
+        try (Statement statement = Util.createStatement()) {
+            statement.executeUpdate(createTableSQL);
         } catch (SQLException e) {
             logger.log(Level.WARNING, "Failed to create table");
         }
@@ -35,8 +36,8 @@ public class UserDaoJDBCImpl implements UserDao {
     @Override
     public void dropUsersTable() {
         String dropTableSQL = "DROP TABLE user";
-        try {
-            Util.createStatement().executeUpdate(dropTableSQL);
+        try (Statement statement = Util.createStatement()) {
+            statement.executeUpdate(dropTableSQL);
         } catch (SQLException e) {
             logger.log(Level.WARNING, "Failed to drop table");
         }
@@ -47,10 +48,11 @@ public class UserDaoJDBCImpl implements UserDao {
         String saveUser = "INSERT INTO `new_schema`.`user`(`name`,`last_name`,`age`)\n" +
                 "VALUES\n" +
                 "(?,?,?);";
-        try {
-            PreparedStatement preparedStatement = Util.createStatement()
-                    .getConnection()
-                    .prepareStatement(saveUser);
+        try (Statement statement = Util.createStatement();
+             PreparedStatement preparedStatement = statement
+                     .getConnection()
+                     .prepareStatement(saveUser)) {
+
             preparedStatement.setString(1, name);
             preparedStatement.setString(2, lastName);
             preparedStatement.setByte(3, age);
@@ -66,10 +68,11 @@ public class UserDaoJDBCImpl implements UserDao {
     public void removeUserById(long id) {
         String removeUser = "DELETE FROM `new_schema`.`user`\n" +
                 "WHERE id=?;";
-        try {
-            PreparedStatement preparedStatement = Util.createStatement()
-                    .getConnection()
-                    .prepareStatement(removeUser);
+        try (Statement statement = Util.createStatement();
+             PreparedStatement preparedStatement = statement
+                     .getConnection()
+                     .prepareStatement(removeUser)) {
+
             preparedStatement.setLong(1, id);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
@@ -81,8 +84,8 @@ public class UserDaoJDBCImpl implements UserDao {
     public List<User> getAllUsers() {
         String getAllUsersSQL = "SELECT * FROM `new_schema`.`user`";
         List<User> users = new ArrayList<>();
-        try {
-            ResultSet resultSet = Util.createStatement().executeQuery(getAllUsersSQL);
+        try (Statement statement = Util.createStatement();
+             ResultSet resultSet = statement.executeQuery(getAllUsersSQL)) {
             while (resultSet.next()) {
                 long id = resultSet.getLong("id");
                 String name = resultSet.getString("name");
@@ -105,9 +108,8 @@ public class UserDaoJDBCImpl implements UserDao {
 
     @Override
     public void cleanUsersTable() {
-        try {
-//            Statement statement = Util.createStatement();
-            Util.createStatement().executeUpdate("DELETE FROM user;");
+        try (Statement statement = Util.createStatement()) {
+            statement.executeUpdate("DELETE FROM user;");
         } catch (SQLException e) {
             logger.warning("Failed to clean table");
         }
