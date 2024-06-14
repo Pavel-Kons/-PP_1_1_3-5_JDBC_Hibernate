@@ -9,7 +9,7 @@ public class Util {
     private static Connection connection = null;
 
     // реализуйте настройку соеденения с БД
-    private static Connection getConnection() throws SQLException {
+    public static Connection getConnection() throws SQLException {
         if (connection != null) {
             return connection;
         }
@@ -22,8 +22,11 @@ public class Util {
         return connection;
     }
 
+//    public static void closeConnection() throws SQLException {
+//        getConnection().close();
+//    }
+
     public static Statement createStatement() throws SQLException {
-//        Statement statement = getConnection().createStatement();
         return getConnection().createStatement();
     }
 }
