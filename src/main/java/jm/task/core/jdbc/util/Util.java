@@ -22,10 +22,6 @@ public class Util {
         return connection;
     }
 
-//    public static void closeConnection() throws SQLException {
-//        getConnection().close();
-//    }
-
     public static Statement createStatement() throws SQLException {
         return getConnection().createStatement();
     }
