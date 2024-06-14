@@ -3,13 +3,9 @@ package jm.task.core.jdbc.dao;
 import jm.task.core.jdbc.model.User;
 import jm.task.core.jdbc.util.Util;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class UserDaoJDBCImpl implements UserDao {
@@ -26,20 +22,22 @@ public class UserDaoJDBCImpl implements UserDao {
                 "  `last_name` VARCHAR(45) NOT NULL,\n" +
                 "  `age` INT(3) NOT NULL,\n" +
                 "  PRIMARY KEY (`id`));";
-        try (Statement statement = Util.createStatement()) {
+        try (Connection connection = Util.getConnection();
+             Statement statement = connection.createStatement()) {
             statement.executeUpdate(createTableSQL);
         } catch (SQLException e) {
-            logger.log(Level.WARNING, "Failed to create table");
+            logger.warning("Failed to create table");
         }
     }
 
     @Override
     public void dropUsersTable() {
-        String dropTableSQL = "DROP TABLE user";
-        try (Statement statement = Util.createStatement()) {
+        String dropTableSQL = "DROP TABLE IF EXISTS user";
+        try (Connection connection = Util.getConnection();
+             Statement statement = connection.createStatement()) {
             statement.executeUpdate(dropTableSQL);
         } catch (SQLException e) {
-            logger.log(Level.WARNING, "Failed to drop table");
+            logger.warning("Failed to drop table");
         }
     }
 
@@ -48,7 +46,8 @@ public class UserDaoJDBCImpl implements UserDao {
         String saveUser = "INSERT INTO `new_schema`.`user`(`name`,`last_name`,`age`)\n" +
                 "VALUES\n" +
                 "(?,?,?);";
-        try (Statement statement = Util.createStatement();
+        try (Connection connection = Util.getConnection();
+             Statement statement = connection.createStatement();
              PreparedStatement preparedStatement = statement
                      .getConnection()
                      .prepareStatement(saveUser)) {
@@ -60,7 +59,7 @@ public class UserDaoJDBCImpl implements UserDao {
 
             System.out.println("User с именем — " + name + " добавлен в базу данных");
         } catch (SQLException e) {
-            logger.log(Level.WARNING, "Failed to insert user");
+            logger.warning("Failed to insert user");
         }
     }
 
@@ -68,7 +67,8 @@ public class UserDaoJDBCImpl implements UserDao {
     public void removeUserById(long id) {
         String removeUser = "DELETE FROM `new_schema`.`user`\n" +
                 "WHERE id=?;";
-        try (Statement statement = Util.createStatement();
+        try (Connection connection = Util.getConnection();
+             Statement statement = connection.createStatement();
              PreparedStatement preparedStatement = statement
                      .getConnection()
                      .prepareStatement(removeUser)) {
@@ -84,7 +84,8 @@ public class UserDaoJDBCImpl implements UserDao {
     public List<User> getAllUsers() {
         String getAllUsersSQL = "SELECT * FROM `new_schema`.`user`";
         List<User> users = new ArrayList<>();
-        try (Statement statement = Util.createStatement();
+        try (Connection connection = Util.getConnection();
+             Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery(getAllUsersSQL)) {
             while (resultSet.next()) {
                 long id = resultSet.getLong("id");
@@ -108,7 +109,8 @@ public class UserDaoJDBCImpl implements UserDao {
 
     @Override
     public void cleanUsersTable() {
-        try (Statement statement = Util.createStatement()) {
+        try (Connection connection = Util.getConnection();
+             Statement statement = connection.createStatement()) {
             statement.executeUpdate("DELETE FROM user;");
         } catch (SQLException e) {
             logger.warning("Failed to clean table");
