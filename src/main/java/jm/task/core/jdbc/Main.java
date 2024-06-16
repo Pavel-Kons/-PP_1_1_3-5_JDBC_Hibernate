@@ -29,7 +29,7 @@ public class Main {
         UserDaoHibernateImpl userDaoHibernate = new UserDaoHibernateImpl();
 //        userDaoHibernate.createUsersTable();
 //        userDaoHibernate.dropUsersTable();
-        userDaoHibernate.getAllUsers();
+//        userDaoHibernate.getAllUsers();
 //        userDaoHibernate.cleanUsersTable();
 
         Configuration configuration = new Configuration().addAnnotatedClass(User.class);

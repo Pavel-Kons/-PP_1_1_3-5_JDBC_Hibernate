@@ -44,17 +44,6 @@ public class UserDaoHibernateImpl implements UserDao {
             session.save(user1);
         });
     }
-//    @Override
-//    public void saveUser(String name, String lastName, byte age) {
-//        Configuration configuration = new Configuration().addAnnotatedClass(User.class);
-//        try (SessionFactory sessionFactory = configuration.buildSessionFactory();
-//             Session session = sessionFactory.getCurrentSession()) {
-//
-//            session.beginTransaction();
-//            User user1 = new User(name, lastName, age);
-//            session.save(user1);
-//        }
-//    }
 
     @Override
     public void removeUserById(long id) {
@@ -73,13 +62,6 @@ public class UserDaoHibernateImpl implements UserDao {
         Util.sessionHibernate((session) -> {
             users.addAll(session.createCriteria(User.class).list());
             System.out.println(users);
-//            for (long i = 1; i < 101; i++) {
-//                User user = session.get(User.class, i);
-//                if (user == null) {
-//                    break;
-//                }
-//                users.add(user);
-//            }
         });
         return users;
     }
@@ -88,13 +70,6 @@ public class UserDaoHibernateImpl implements UserDao {
     public void cleanUsersTable() {
         Util.sessionHibernate((session) -> {
             session.createQuery("delete from User").executeUpdate();
-//            for (long i = 1; i < 101; i++) {
-//                User user = session.get(User.class, i);
-//                if (user != null) {
-//                    System.out.println(user);
-//                    session.remove(user);
-//                }
-//            }
             session.getTransaction().commit();
         });
     }
